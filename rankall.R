@@ -44,7 +44,7 @@ rankall <- function(outcome, num = "best") {
 
     all_state_ranks = lapply(splited, function(x, num) {
            # Order by mortality_rate and hospital
-           x = x[order(x$mortality_rate, x$hospital),]
+           x <- x[order(x$mortality_rate, x$hospital),]
     
            return (x$hospital[num])
          }, num)

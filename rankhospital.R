@@ -33,19 +33,20 @@ rankhospital <- function(state, outcome, num = "best") {
       stop('invalid num')
     }
 
-    ## Return hospital name in that state with the given rank 30-day death rate
-    mortality_vec <- c("heart attack", "heart failure", "pneumonia")
-    col_pos <- c(11, 17, 23)
+    if (outcome == "heart attack") {
+       dataset <- subset(data_state, select = c(2, 7, 11))
+    }
+    else if (outcome == "heart failure") {
+       dataset <- subset(data_state, select = c(2, 7, 17))
+    }
+    else if (outcome == "pneumonia") {
+       dataset <- subset(data_state, select = c(2, 7, 23))
+    }
 
-    #Choose the column index from the data set for the specified outcome 
-    col_ix <- which(mortality_vec == outcome)
-
-
-    #Ordered list of hospitals with mortality rates for the specified outcome
-    hospital_list <- data_state[order(data_state[,col_pos[col_ix]], data_state$Hospital.Name),]
-
-    #Get name of the hospital with specified ranking
-    hospital_name <- hospital_list[num,]$Hospital.Name
+    dataset[, 3] <- suppressWarnings(as.numeric(dataset[, 3]))
+    colnames(dataset) <- c("hospital", "state", "mortality_rate")
+    hospital_list <- dataset[order(dataset$mortality_rate, dataset$hospital),]
+    hospital_name <- hospital_list[num,]$hospital
 
     hospital_name
 }
